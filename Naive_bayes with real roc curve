@@ -1,0 +1,51 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+data = pd.read_csv("C:\\Users\\Narendra Babu\\Downloads\\covid.csv")
+from sklearn import preprocessing
+le = preprocessing.LabelEncoder()
+pc_encoded=le.fit_transform(data['pc'].values)
+wbc_encoded=le.fit_transform(data['wbc'].values)
+mc_encoded=le.fit_transform(data['mc'].values)
+ast_encoded=le.fit_transform(data['ast'].values)
+bc_encoded=le.fit_transform(data['bc'].values)
+ldh_encoded=le.fit_transform(data['ldh'].values)
+Y=le.fit_transform(data['diagnosis'].values)
+X=np.array(list(zip(pc_encoded,wbc_encoded,mc_encoded,ast_encoded,bc_encoded,ldh_encoded)))
+X
+Y
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import classification_report
+from sklearn.model_selection import validation_curve
+model = MultinomialNB()
+from sklearn.model_selection import train_test_split
+X_train,X_test,Y_train,Y_test=train_test_split(X,Y)
+model.fit(X_train, Y_train)
+y_pred = model.predict(X_test)
+print("Accuracy:",accuracy_score(Y_test, y_pred))
+print("\nReport")
+print(classification_report(Y_test,y_pred))
+
+# Plot ROC curve
+plt.figure(figsize=(8, 6))
+plt.plot(fpr, tpr, color='b', label='ROC curve')
+plt.plot([0, 1], [0, 1], color='gray', linestyle='--', label='Random Guess')
+plt.title('Receiver Operating Characteristic (ROC) Curve')
+plt.xlabel('False Positive Rate (FPR)')
+plt.ylabel('True Positive Rate (TPR)')
+plt.legend()
+plt.show()
+# Draw validation curves
+param_range = np.logspace(-6, 6, 13)
+train_scores, test_scores = validation_curve(GaussianNB(), X, y, param_name="var_smoothing", param_range=param_range, cv=5)
+
+plt.figure(figsize=(8, 6))
+plt.plot(param_range, np.mean(train_scores, axis=1), label='Training score')
+plt.plot(param_range, np.mean(test_scores, axis=1), label='Cross-validation score')
+plt.xscale('log')
+plt.title('Validation Curve for Naïve Bayesian Classifier')
+plt.xlabel('Smoothing Parameter (var_smoothing)')
+plt.ylabel('Score')
+plt.legend()
+plt.show()
