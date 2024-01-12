@@ -1,0 +1,32 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans
+from sklearn.datasets import make_blobs
+
+# Generate synthetic data
+n_samples = 300
+n_features = 2
+n_clusters = 3
+
+X, _ = make_blobs(n_samples=n_samples, n_features=n_features, centers=n_clusters, random_state=42)
+
+# Create a K-Means instance
+kmeans = KMeans(n_clusters=n_clusters, random_state=42)
+
+# Fit the K-Means model to your data
+kmeans.fit(X)
+
+# Get cluster assignments for each data point
+labels = kmeans.labels_
+
+# Get the coordinates of cluster centers
+cluster_centers = kmeans.cluster_centers_
+
+# Visualize the data and cluster centers
+plt.scatter(X[:, 0], X[:, 1], c=labels, cmap='viridis')
+plt.scatter(cluster_centers[:, 0], cluster_centers[:, 1], marker='x', s=200, c='red', label='Cluster Centers')
+plt.title('K-Means Clustering')
+plt.xlabel('Feature 1')
+plt.ylabel('Feature 2')
+plt.legend()
+plt.show()
